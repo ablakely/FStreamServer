@@ -1,0 +1,345 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE dictionary SYSTEM "file://localhost/System/Library/DTDs/sdef.dtd">
+
+<dictionary title="FStream Terminology">
+
+	<!--
+		STANDARD SUITE
+	-->
+	<suite name="Standard Suite" code="core"
+		description="Common classes and commands for all applications.">
+
+		<cocoa name="NSCoreSuite"/>
+
+		<command name="open" code="aevtodoc"
+			description="Open a document.">
+			<direct-parameter description="The file(s) to be opened.">
+				<type type="file" list="yes"/>
+			</direct-parameter>
+			<!--
+				According to TN2106, 'open' should return the resulting document
+				object.  However, the Cocoa implementation does not do this yet.
+			<result type="specifier"/>
+			-->
+		</command>
+
+		<command name="quit" code="aevtquit" description="Quit the application.">
+			<cocoa class="NSQuitCommand"/>
+		</command>
+
+		<command name="count" code="corecnte"
+			description="Return the number of elements of a particular class within an object.">
+			<cocoa class="NSCountCommand"/>
+			<direct-parameter type="specifier"
+				description="the object whose elements are to be counted"/>
+			<parameter name="each" code="kocl" type="type" optional="yes"
+				description="The class of objects to be counted.">
+				<cocoa key="ObjectClass"/>
+			</parameter>
+			<result type="integer" description="the number of elements"/>
+		</command>
+
+		<command name="delete" code="coredelo" description="Delete an object.">
+			<cocoa class="NSDeleteCommand"/>
+			<direct-parameter type="specifier" description="the object to delete"/>
+		</command>
+
+		<command name="duplicate" code="coreclon"
+			description="Copy object(s) and put the copies at a new location.">
+			<cocoa class="NSCloneCommand"/>
+			<direct-parameter type="specifier"
+				description="the object(s) to duplicate"/>
+			<parameter name="to" code="insh" type="location specifier" optional="yes"
+				description="The location for the new object(s).">
+				<cocoa key="ToLocation"/>
+			</parameter>
+			<parameter name="with properties" code="prdt" type="record" optional="yes"
+				description="Properties to be set in the new duplicated object(s).">
+				<cocoa key="WithProperties"/>
+			</parameter>
+			<result type="specifier" description="the duplicated object(s)"/>
+		</command>
+
+		<command name="exists" code="coredoex" description="Verify if an object exists.">
+			<cocoa class="NSExistsCommand"/>
+			<direct-parameter type="any" description="the object in question"/>
+			<result type="boolean" description="true if it exists, false if not"/>
+		</command>
+
+		<command name="make" code="corecrel" description="Make a new object.">
+			<cocoa class="NSCreateCommand"/>
+			<parameter name="new" code="kocl" type="type"
+				description="The class of the new object.">
+				<cocoa key="ObjectClass"/>
+			</parameter>
+			<parameter name="at" code="insh" type="location specifier" optional="yes"
+				description="The location at which to insert the object.">
+				<cocoa key="Location"/>
+			</parameter>
+			<parameter name="with data" code="data" type="any" optional="yes"
+				description="The initial contents of the object.">
+				<cocoa key="ObjectData"/>
+			</parameter>
+			<parameter name="with properties" code="prdt" type="record" optional="yes"
+				description="The initial values for properties of the object.">
+				<cocoa key="KeyDictionary"/>
+			</parameter>
+			<result type="specifier" description="to the new object"/>
+		</command>
+
+		<command name="move" code="coremove" description="Move object(s) to a new location.">
+			<cocoa class="NSMoveCommand"/>
+			<direct-parameter type="specifier" description="the object(s) to move"/>
+			<parameter name="to" code="insh" type="location specifier"
+				description="The new location for the object(s).">
+				<cocoa key="ToLocation"/>
+			</parameter>
+			<result type="specifier" description="the moved object(s)"/>
+		</command>
+
+		<class name="application" code="capp"
+			description="The application's top-level scripting object.">
+			<cocoa class="FSApplication"/>
+			<property name="name" code="pnam" type="text" access="r"
+				description="The name of the application."/>
+			<property name="frontmost" code="pisf" type="boolean" access="r"
+				description="Is this the frontmost (active) application?">
+				<cocoa key="isActive"/>
+			</property>
+			<property name="version" code="vers" type="text" access="r"
+				description="The version of the application."/>
+			<element type="window" access="r">
+				<cocoa key="orderedWindows"/>
+			</element>
+			<responds-to name="open">
+				<cocoa method="handleOpenScriptCommand:"/>
+			</responds-to>
+			<responds-to name="quit">
+				<cocoa method="handleQuitScriptCommand:"/>
+			</responds-to>
+		</class>
+
+		<class name="window" code="cwin" description="A window.">
+			<cocoa class="NSWindow"/>
+			<property name="name" code="pnam" type="text" access="r"
+				description="The full title of the window.">
+				<cocoa key="title"/>
+			</property>
+			<property name="id" code="ID  " type="integer" access="r"
+				description="The unique identifier of the window.">
+				<cocoa key="uniqueID"/>
+			</property>
+			<property name="index" code="pidx" type="integer"
+				description="The index of the window, ordered front to back.">
+				<cocoa key="orderedIndex"/>
+			</property>
+			<property name="bounds" code="pbnd" type="rectangle"
+				description="The bounding rectangle of the window.">
+				<cocoa key="boundsAsQDRect"/>
+			</property>
+			<property name="closeable" code="hclb" type="boolean" access="r"
+				description="Whether the window has a close box.">
+				<cocoa key="hasCloseBox"/>
+			</property>
+			<property name="minimizable" code="ismn" type="boolean" access="r"
+				description="Whether the window can be minimized.">
+				<cocoa key="isMiniaturizable"/>
+			</property>
+			<property name="minimized" code="pmnd" type="boolean"
+				description="Whether the window is currently minimized.">
+				<cocoa key="isMiniaturized"/>
+			</property>
+			<property name="resizable" code="prsz" type="boolean" access="r"
+				description="Whether the window can be resized.">
+				<cocoa key="isResizable"/>
+			</property>
+			<property name="visible" code="pvis" type="boolean"
+				description="Whether the window is currently visible.">
+				<cocoa key="isVisible"/>
+			</property>
+			<property name="zoomable" code="iszm" type="boolean" access="r"
+				description="Whether the window can be zoomed.">
+				<cocoa key="isZoomable"/>
+			</property>
+			<property name="zoomed" code="pzum" type="boolean"
+				description="Whether the window is currently zoomed.">
+				<cocoa key="isZoomed"/>
+			</property>
+			<responds-to name="close">
+				<cocoa method="handleCloseScriptCommand:"/>
+			</responds-to>
+			<responds-to name="save">
+				<cocoa method="handleSaveScriptCommand:"/>
+			</responds-to>
+		</class>
+
+	</suite>
+
+
+	<!--
+		FSTREAM SUITE
+	-->
+	<suite name="FStream Suite" code="FsRw" description="FStream-specific classes and commands.">
+		
+		<!-- Record -->
+		<record-type name="webradio" code="wbrd">
+   			<property name="url" code="rurl" type="text" description="the url of the webradio">
+        		<cocoa key="url"/>
+    		</property>
+    		<property name="name" code="rnam" type="text" description="the name of the webradio">
+				<cocoa key="name"/>
+			</property>
+   			<property name="access" code="racc" type="text" description="the hierarchical access to the item">
+        		<cocoa key="access"/>
+   			</property>
+			<property name="sublist" code="rlst" type="list of webradio" description="contain a sublist of webradios if the item is a folder">
+        		<cocoa key="sublist"/>
+   			</property>
+		</record-type>
+		
+		
+	
+		<!-- Commands -->
+		<command name="addStreamWithName" code="FsRwastr" description="Add a webradio to the FStream favorites.">
+			<cocoa class="FSAppleScriptCommand"/> 
+			<direct-parameter type="text" description="The name of the webradio." />
+			<parameter name="andUrl" code="fsul" type="text" description="The URL of the webradio.">
+				<cocoa key="andUrl"/>
+			</parameter>
+			<parameter name="atParentAccess" code="fsac" type="text" description="The access of parent folder for the new favorite webradio.">
+				<cocoa key="atParentAccess"/>
+			</parameter>
+			<parameter name="onPosition" optional="yes" code="fspo" type="integer" description="The optional position in the folder.">
+				<cocoa key="onPosition"/>
+			</parameter>
+		</command>
+		
+		<command name="addFolderWithName" code="FsRwastr" description="Add a folder to the FStream favorites.">
+			<cocoa class="FSAppleScriptCommand"/> 
+			<direct-parameter type="text" description="The name of the folder." />
+			<parameter name="atParentAccess" code="fsac" type="text" description="The access of parent folder for the new folder.">
+				<cocoa key="atParentAccess"/>
+			</parameter>
+			<parameter name="onPosition" optional="yes" code="fspo" type="integer" description="The optional position in the folder.">
+				<cocoa key="onPosition"/>
+			</parameter>
+		</command>
+		
+		<command name="openStreamWithURL" code="FsRwostr" description="Play a webradio with it's URL.">
+            <cocoa class="FSAppleScriptCommand"/>
+            <direct-parameter type="text" description="The URL of the webradio." />
+			
+			<parameter name="andName" optional="yes" code="fnam" type="text" description="The optional name of the webradio.">
+				<cocoa key="andName"/>
+			</parameter>
+		</command>
+		
+		<command name="stopPlaying" code="FsRwstop" description="Stop the webradio, if there is one loaded.">
+            <cocoa class="FSAppleScriptCommand"/>
+		</command>
+		
+		<command name="startPlaying" code="FsRwplay" description="Start playing the selected webradio, or unpause if a webradio is loaded but in pause.">
+            <cocoa class="FSAppleScriptCommand"/>
+		</command>
+		
+		<command name="pausePlaying" code="FsRwpose" description="Pause the webradio, if there is one loaded.">
+            <cocoa class="FSAppleScriptCommand"/>
+		</command>
+		
+		<command name="startRecording" code="FsRwrsta" description="Start recording session.">
+            <cocoa class="FSAppleScriptCommand"/>
+		</command>
+		
+		<command name="stopRecording" code="FsRwrstp" description="Stop recording session, if a record session is started.">
+            <cocoa class="FSAppleScriptCommand"/>
+		</command>
+		
+		<command name="pauseRecording" code="FsRwrpos" description="Pause recording session, if a record session is started.">
+            <cocoa class="FSAppleScriptCommand"/>
+		</command>
+		
+		<command name="playingArtist" code="FsRwarts" description="Get the actual music artist.">
+            <cocoa class="FSAppleScriptCommand"/>
+            <result type="text" description="the music artist"/>
+		</command>
+		
+		<command name="playingName" code="FsRwinam" description="Get the actual webradio name.">
+            <cocoa class="FSAppleScriptCommand"/>
+            <result type="text" description="the webradio name"/>
+		</command>
+		
+		<command name="playingTitle" code="FsRwtitl" description="Get the actual music title.">
+            <cocoa class="FSAppleScriptCommand"/>
+            <result type="text" description="the music title"/>
+		</command>
+		
+		<command name="playingAlbum" code="FsRwalbm" description="Get the actual music album.">
+            <cocoa class="FSAppleScriptCommand"/>
+            <result type="text" description="the music album"/>
+		</command>
+		
+		<command name="playingURL" code="FsRwiurl" description="Get the actual webradio URL.">
+            <cocoa class="FSAppleScriptCommand"/>
+            <result type="text" description="the webradio URL"/>
+		</command>
+		
+		<command name="status" code="FsRwstat" description="Get the actual FStream state.">
+            <cocoa class="FSAppleScriptCommand"/>
+            <result type="integer" description="the fstream state"/>
+		</command>
+		
+		<command name="paused" code="FsRwipos" description="Know if FStream is paused or not.">
+            <cocoa class="FSAppleScriptCommand"/>
+            <result type="boolean" description="the pause state"/>
+		</command>
+		
+		<command name="pausedRecord" code="FsRwfpos" description="Know if the record session is paused or not.">
+            <cocoa class="FSAppleScriptCommand"/>
+            <result type="boolean" description="the session record pause state"/>
+		</command>
+		
+		<command name="recording" code="FsRwfrec" description="Know if FStream is recording.">
+            <cocoa class="FSAppleScriptCommand"/>
+            <result type="boolean" description="the recording state"/>
+		</command>
+		
+		<command name="volume" code="FsRwgvol" description="Get the user volume in FStream.">
+            <cocoa class="FSAppleScriptCommand"/>
+            <result type="integer" description="the user volume"/>
+		</command>
+		
+		<command name="setVolume" code="FsRwsvol" description="Set the user volume in FStream.">
+            <cocoa class="FSAppleScriptCommand"/>
+            <direct-parameter type="integer" description="The user volume." />
+		</command>
+		
+		<command name="treeOfPlaylist" code="FsRwtree" description="Get the tree of the FStream favorite webradios.">
+            <cocoa class="FSAppleScriptCommand"/>
+            <result type="list of webradio" description="the hierarchical list of favorite webradios"/>
+		</command>
+		
+		<command name="nameOfItem" code="FsRwlnam" description="Get the name of a favorite item in FStream.">
+            <cocoa class="FSAppleScriptCommand"/>
+            <direct-parameter type="text" description="The access of the webradio." />
+            <result type="text" description="the name of the item"/>
+		</command>
+		
+		<command name="urlOfPlaylist" code="FsRwlurl" description="Get the URL of a favorite wabradio in FStream.">
+            <cocoa class="FSAppleScriptCommand"/>
+            <direct-parameter type="text" description="The access of the webradio." />
+            <result type="text" description="the URL of the playlist"/>
+		</command>
+		
+		<command name="openPlaylist" code="FsRwlope" description="Open a favorite webradio in FStream.">
+            <cocoa class="FSAppleScriptCommand"/>
+            <direct-parameter type="text" description="The access of the webradio." />
+		</command>
+		
+		<command name="removeItem" code="FsRwlrem" description="Remove an item in FStream.">
+            <cocoa class="FSAppleScriptCommand"/>
+            <direct-parameter type="text" description="The access of the item (playlist of folder)." />
+		</command>
+
+	</suite>
+
+</dictionary>

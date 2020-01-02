@@ -1,0 +1,112 @@
+﻿<html>
+    <head>
+        <meta http-equiv="content-type" content="text/html; charset=utf-8">
+        <title>Aide FStream : Touches modificatrices</title>
+        <meta name="AppleTitle" content="Aide FStream">
+        <meta name="robots" content="index">
+        <meta name="copyright" content="Copyright 2005-2008 SourceMac.">
+        <link href="../styles/def.css" rel="stylesheet" media="all">
+        <meta name="keywords" content="comportement, panneau lecture, panneau enregistrement, panneau, lecture, enregistrement, recharger, touche, contrôler, simuler, majuscule, option">
+        <meta name="description" content="Touche de modification de comportement">
+    </head>
+
+    <body>
+
+        <table border="0" cellpadding="0" cellspacing="0">
+            <tr>
+                <td valign="top">
+                    <table border="0" cellpadding="10" cellspacing="0" width="154">
+                        <tr>
+                            <td>
+                                <center><img src="../medias/FStream.png"></center>
+                                <p class="side">
+                                    &#187;&nbsp;<a href="pgInterface.html">Interface</a><br>
+                                    &#187;&nbsp;<a href="pgKeys.html">Touches modificatrices</a><br>
+                                    &#187;&nbsp;<a href="pgRecording.html">Enregistrement</a><br>
+                                    &#187;&nbsp;<a href="pgManager.html">Gestion des streams</a><br>
+                                    &#187;&nbsp;<a href="pgQuickOpen.html">Ouverture rapide</a><br>
+                                    &#187;&nbsp;<a href="pgPreferences.html">Préférences</a><br>
+                                    &#187;&nbsp;<a href="pgMisc.html">Divers</a><br>
+									&#187;&nbsp;<a href="pgDevelopers.html">Développeurs</a><br>
+                                    &#187;&nbsp;<a href="pgHistory.html">Historique</a><br>
+                                    &#187;&nbsp;<a href="pgAbouts.html">Information &amp; Crédits</a><br>
+                                </p>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+                
+                <td width="2" bgcolor="#dddddd">
+                </td>
+                <td valign="top">
+                    <div id="pagetitle">
+                        <h1>Touches modificatrices</h1>
+                    </div>
+                    <p>
+                        Les touches modificatrices permettent de modifier le comportement de FStream, comme décrit ci-dessous. 
+                    </p>
+                
+                    <ul>
+                        <li>
+                            <b>Panneau de lecture (aucune touche)</b>:<br>
+                            L'affichage de FStream est alors en mode normal (c'est à dire lecture de flux audio).
+                            <div id="taskbox">
+                                <ul>
+                                    <li>La zone d'info affiche les informations décrites dans la section Interface.</li>
+                                    <li>
+                                        Le contrôleur peut alors afficher :
+                                        <ul>
+                                            <li>Un symbole "Lecture" (flèche) signifiant que soit aucune web radio n'est chargée, soit que le stream actuel est en pause. Un click dessus fera alors respectivement charger le flux audio sélectionné (si il y en a un) ou enlèvera FStream de la pause.</li>
+                                            <li>Un symbole "Pause" (double barre) signifiant qu'une web radio chargé est en lecture. Un click dessus mettra alors le flux audio en pause (voir les différents modes de pause dans la section Préférences).</li>
+                                            <li>Une vague signifiant que FStream est en train de charger un flux audio.</li>
+                                        </ul>
+                                    </li>
+                                    <li>La fenêtre principale a pour couleur de fond un jaune clair.</li>
+                                </ul>
+                            </div>
+                        </li>
+                        
+                        <li>
+                            <b>Panneau d'enregistrement (touche Majuscule)</b>:<br>
+                            L'affichage de FStream est alors en mode enregistrement.
+                            <div id="taskbox">
+                                <ul>
+                                    <li>La zone info affiche la taille en hhh:mm:ss du fichier audio d'enregistrement de la session d'enregistrement en cours.</li>
+                                    <li>
+                                        Le contrôleur peut alors afficher :
+                                        <ul>
+                                            <li>Un symbole "Enregistrement" (rond) signifiant que soit il n'y a pas de session d'enregistrement en cours, soit la session d'enregistrement est en pause. Un click dessus fera alors respectivement démarrer une nouvelle session d'enregistrement (c'est à dire création d'un nouveau fichier audio - l'emplacement des fichiers audio peut être définit dans Préférences > panneau “Sauver” > bouton "Dossier d'enregistrement" - et remise à zéro du compteur) ou remettre en enregistrement la session d'enregistrement.</li>
+                                            <li>Un symbole "Pause" (double barre) signifiant que FStream est en train d'enregistrer la sortie audio. Un click dessus mettra alors la session d'enregistrement en pause.</li>
+                                        </ul>
+                                    </li>
+                                    <li>La fenêtre principale a pour couleur de fond un rouge clair, pour bien différencier le panneau normal de lecture de flux et le panneau d'enregistrement.</li>
+                                </ul>
+                            </div>
+                        </li>
+                        
+                        <li>
+                            <b>Stopper la lecture/l'enregistrement (touche Alt)</b>:<br>
+                            <div id="taskbox">
+                                <ul>
+                                    <li>Si vous ête en mode lecture (touche Majuscule non pressée), et qu'un flux audio est chargé, le contrôleur va afficher un symbole "Stop" (carré). Un click dessus va alors simplement stopper le flux chargé.</li>
+                                    <li>Si vous êtes en mode enregistrement (touche Majuscule pressée), et qu'une session d'enregistrement est en cours, le contrôleur va afficher un symbole "Stop" (carré). Un click dessus va alors simplement stopper la session d'enregistrement et fermer le fichier audio de la session.</li>
+                                </ul>
+                            </div>
+                        </li>
+                        
+                        <li>
+                            <b>Recharger le flux actuel (touche "r")</b>:<br>
+                            Si un flux audio est en cours de chargement ou est chargé, le contrôleur va afficher un symbole "Rechargement" (3/4 de cercle avec une flèche). Un click dessus va alors simplement recharger le flux audio.
+                        </li>
+                        
+                        <li>
+                            <b>Simuler un click sur le contrôleur (Barre d'espace)</b>:<br>
+                            Appuyez simplement sur la barre d'espace pour simuler un click sur le contrôleur.
+                        </li>
+                        
+                    </ul>
+                </td>
+            </tr>
+        </table>
+    </body>
+</html>

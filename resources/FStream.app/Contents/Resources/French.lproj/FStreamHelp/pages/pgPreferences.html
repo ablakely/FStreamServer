@@ -1,0 +1,164 @@
+﻿<html>
+    <head>
+        <meta http-equiv="content-type" content="text/html; charset=utf-8">
+        <title>Aide FStream : Préférence</title>
+        <meta name="AppleTitle" content="Aide FStream">
+        <meta name="robots" content="index">
+        <meta name="copyright" content="Copyright 2005-2008 SourceMac.">
+        <link href="../styles/def.css" rel="stylesheet" media="all">
+        <meta name="keywords" content="préférence, divers, apple, télécommande, contrôleur, info, encodage, cache, mise à jour, majuscule, information, tag, défilement, enregistrement, format, débit, qualité, time, décalage, apparence, skin, jaune, bleu, événement, événements, growl, historique, vois, prononcer, connexion, socks, SOCKSV4, SOCKSV5, SOCKS4, SOCKS5, proxy">
+        <meta name="description" content="Préférences de FStream">
+    </head>
+
+    <body>
+
+        <table border="0" cellpadding="0" cellspacing="0">
+            <tr>
+                <td valign="top">
+                    <table border="0" cellpadding="10" cellspacing="0" width="154">
+                        <tr>
+                            <td>
+                                <center><img src="../medias/FStream.png"></center>
+                                <p class="side">
+                                    &#187;&nbsp;<a href="pgInterface.html">Interface</a><br>
+                                    &#187;&nbsp;<a href="pgKeys.html">Touches modificatrices</a><br>
+                                    &#187;&nbsp;<a href="pgRecording.html">Enregistrement</a><br>
+                                    &#187;&nbsp;<a href="pgManager.html">Gestion des streams</a><br>
+                                    &#187;&nbsp;<a href="pgQuickOpen.html">Ouverture rapide</a><br>
+                                    &#187;&nbsp;<a href="pgPreferences.html">Préférences</a><br>
+                                    &#187;&nbsp;<a href="pgMisc.html">Divers</a><br>
+									&#187;&nbsp;<a href="pgDevelopers.html">Développeurs</a><br>
+                                    &#187;&nbsp;<a href="pgHistory.html">Historique</a><br>
+                                    &#187;&nbsp;<a href="pgAbouts.html">Information &amp; Crédits</a><br>
+                                </p>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+                
+                <td width="2" bgcolor="#dddddd">
+                </td>
+                <td valign="top">
+                    <div id="pagetitle">
+                        <h1>Préférences</h1>
+                    </div>
+                    <p>
+                        FStream est un petit logiciel, mais il y a de nombreuses choses personnalisables. Vous pouvez trouver ici une description des préférences.
+                    </p>
+                
+                    <ul>
+                        <li>
+                            <b>Divers</b>:<br>
+                            
+                            <div id="taskbox">
+                                <ul>
+                                    <li><b>Télécommande Apple IR Remote</b>: vous permez d'activer ou désactiver la télécommande dans FStream (de manière exclusive ou non).</li>
+                                    <li><b>Fenêtre principale</b>: permet de spécifier si la fenêtre principale de FStream soit se trouver par dessus les autres ou non.</li>
+									<li><b>Menu statut</b>: permet d'afficher un menu de statut à droite de votre barre de menu pour contrôler FStream de n'importe où.</li>
+                                    <li><b>Mise à jour</b>: activez cette option pour permettre à FStream de vérifier automatiquement la présence de mise à jour à chaque lancement du logiciel. Le bouton "Maintenant" permet d'effectuer cette vérification de suite.</li>
+                                </ul>
+                            </div>
+                        </li>
+                        
+                        <li>
+                            <b>Apparence</b>:<br>
+                            Permet de changer l'apparence de la fenêtre principale de FStream. Référez-vous au site <a href="http://www.sourcemac.com?page=fstream&subpage=plugin">SourceMac.com</a> pour en télécharger et savoir comment en fabriquer.<br>
+                            
+                            <div id="taskbox">
+                                <ul>
+                                    <li>Pour changer d'apparence, sélectionnez l'apparence que vous voulez utiliser dans la liste. Les informations sur l'apparence sélectionné apparaissent dans le cadre de droite.</li>
+                                </ul>
+                            </div>
+                        </li>
+                    
+                        <li>
+                            <b>Info</b>:<br>
+                            Permet de configurer les informations affichés dans la fenêtre principale de FStream.
+                            
+                            <div id="taskbox">
+                                <ul>
+                                    <li><b>Changement d'information</b> permet de dire si FStream doit automatiquement changer l'information affiché toutes les 5 secondes (activé ou non, un click sur la zone d'information permet de toute façon de changer l'information affichée) et d'activer/désactiver l'animation de défilement.</li>
+                                    <li><b>Information WebRadio</b> permet de choisir l'encodage d'affichage des informations des WebRadio, de ne pas prendre en compte une information si elle contient un élément définit (exemple "À suivre :") et de changer la casse des informations.</li>
+                                    <li><b>iChat</b> permet de changer automatiquement le statut d'iChat avec le titre de la musique et le nom de l'artiste quand ils changent.</li>
+                                </ul>
+                            </div>
+                        </li>
+                        
+                        <li>
+                            <b>Événements</b>:<br>
+                            Permet d'attraper des événements de FStream. Les événements peuvent être envoyés vers l'historique (vous pouvez accéder à la fenêtre d'historique via le menu Fenêtre) et/ou vers <a href="http://growl.info/">Growl</a>.
+                        </li>
+                        
+                        <li>
+                            <b>Enregistrement</b>:<br>
+                            Permet de configurer l'enregistrement des streams.
+                            
+                            <div id="taskbox">
+                                <ul>
+                                    <li><b>Dossier d'enregistrement</b>: permet de choisir le dossier de destination pour les fichiers audio.</li>
+                                    <li><b>Format</b> permet de choisir le format des fichier audio (mp3/aac/aiff/wav).</li>
+                                    <li><b>Qualité</b> permet de spécifier le débit (en kbps) et la qualité de l'algorithme d'encodage pour le format d'enregistrement mp3. Si vous voulez utiliser le même débit que la web radio pour votre enregistrement, utilisez "Auto" dans le menu débit.</li>
+                                </ul>
+                            </div>
+                        </li>
+                        
+                         <li>
+                            <b>Pause</b>:<br>
+                            Permet de définir le comportement de la pause dans le panneau de lecture.
+                            
+                            <div id="taskbox">
+                                <ul>
+                                    <li><b>Pause (silence uniquement)</b>: dans ce mode, un click sur le bouton pause du contrôleur va simplement couper la sortie audio et couper l'enregistrement si une session est en cours. En sortant de pause, vous allez simplement réentendre le flux tel qu'il est actuellement diffusé.</li>
+                                    <li><b>Pause (silence, mise en cache pour reprise)</b>: dans ce mode, un click sur le bouton pause du contrôleur va alors enregistrer le flux audio dans le dossier de cache (que vous pouvez changer avec le bouton "Dossier de cache") et couper l'enregistrement si une session est en cours. En sortant de pause, vous allez alors simplement reprendre la lecture du flux audio là où vous l'avez mis en pause, via l'utilisation des fichiers de cache. L'écoute n'est alors bien sûr plus en temps réel par rapport au flux audio tel qu'il est diffusé.<br>La cache est un groupe de fichier, chacun étant coupé à une taille maximum de 100 Ko. Quand un fichier n'est plus utilisé, il est supprimé.</li>
+                                </ul>
+                            </div>
+                        </li>
+                        
+                        <li>
+                            <b>Parole</b>:<br>
+                            Permet de configurer la synthèse vocale dans FStream.<br>
+                            
+                            <div id="taskbox">
+                                <ul>
+                                    <li>
+                                        <b>Éléments prononcés</b><br>
+                                        Activer ces options a pour effet de faire prononcer par la synthèse vocale d'Apple le nom de la radio, et/ou prononcer le nom, l'artiste et l'album de la musique quand ils changent. (La voix utilisée pour la prononciation peut être changée dans le panneau Parole des Préférences Système [Préférences Système > Parole > Synthèse vocale: Voix système].)
+                                    </li>
+                                    <li>
+                                        <b>Activation de la parole</b><br>
+                                        <i>'Circonstance'</i> permet de configurer quand la parole est déclenchée : au chargement de la web radio, ou après.<br>
+                                        <i>'Télécommande'</i> permet d'activer la parole seulement quand vous contrôlez FStream via la télécommande d'Apple.
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+                        
+                        <li>
+                            <b>Connexion</b>:<br>
+                            Permet de configurer la connexion Internet de FStream.
+                            <div id="taskbox">
+                                <ul>
+                                    <li>
+                                        <b>Cache</b>:<br>
+                                        La case à cocher permet de définir le pourcentage de remplissage à partir duquel FStream doit recharger le stream. Utile si le stream n'est plus reçu pendant un certain laps de temps (déconnexion par exemple).<br>
+                                        Le pop-up menu "Mémoire cache" permet de définir la taille de la cache (Petite pour une connexion ADSL stable, Grande pour une connexion 56k assez stable).
+                                    </li>
+                                    
+									 <li>
+                                        <b>Reconnexion</b>:<br>
+										Permet de dire à FStream de se reconnecter un certain nombre de fois, tant que la connexion échoue.
+                                    </li>
+									
+                                    <li>
+                                        <b>Proxy</b>:<br>
+                                        Vous avez la possibilité d'utiliser un proxy SOCKS (version 4 ou 5) pour toutes les connexions Internet de FStream (par exemple si vous vous trouvez dans un réseau nécessitant un accès proxy pour accéder à Internet).
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+        </table>
+    </body>
+</html>

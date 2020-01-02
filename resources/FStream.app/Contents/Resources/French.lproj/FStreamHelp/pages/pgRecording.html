@@ -1,0 +1,69 @@
+﻿<html>
+    <head>
+        <meta http-equiv="content-type" content="text/html; charset=utf-8">
+        <title>Aide FStream : Enregistrement</title>
+        <meta name="AppleTitle" content="Aide FStream">
+        <meta name="robots" content="index">
+        <meta name="copyright" content="Copyright 2005-2008 SourceMac.">
+        <link href="../styles/def.css" rel="stylesheet" media="all">
+        <meta name="keywords" content="enregistrement, AIFF, AAC, MP3, fichier, son, ref, panneau">
+        <meta name="description" content="Informations sur la fonction d'enregistrement de FStream">
+    </head>
+
+    <body>
+
+        <table border="0" cellpadding="0" cellspacing="0">
+            <tr>
+                <td valign="top">
+                    <table border="0" cellpadding="10" cellspacing="0" width="154">
+                        <tr>
+                            <td>
+                                <center><img src="../medias/FStream.png"></center>
+                                <p class="side">
+                                    &#187;&nbsp;<a href="pgInterface.html">Interface</a><br>
+                                    &#187;&nbsp;<a href="pgKeys.html">Touches modificatrices</a><br>
+                                    &#187;&nbsp;<a href="pgRecording.html">Enregistrement</a><br>
+                                    &#187;&nbsp;<a href="pgManager.html">Gestion des streams</a><br>
+                                    &#187;&nbsp;<a href="pgQuickOpen.html">Ouverture rapide</a><br>
+                                    &#187;&nbsp;<a href="pgPreferences.html">Préférences</a><br>
+                                    &#187;&nbsp;<a href="pgMisc.html">Divers</a><br>
+									&#187;&nbsp;<a href="pgDevelopers.html">Développeurs</a><br>
+                                    &#187;&nbsp;<a href="pgHistory.html">Historique</a><br>
+                                    &#187;&nbsp;<a href="pgAbouts.html">Information &amp; Crédits</a><br>
+                                </p>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+                
+                <td width="2" bgcolor="#dddddd">
+                </td>
+                <td valign="top">
+                    <div id="pagetitle">
+                        <h1>Enregistrement</h1>
+                    </div>
+                    <p>
+                        FStream a la possibilité d'enregistrer la web-radio que vous écoutez. Vous pouvez trouver ici quelques explications sur cette fonctionnalité. 
+                    </p>
+                
+                    <ul>
+                        <li>
+                            <b>Apparence du contrôleur</b>:<br>
+                            Si une session d'enregistrement est en cours, le contrôleur va avoir une couleur de fond rouge plutôt que gris, et les symboles seront gris très clair plutôt que gris foncé.
+                        </li>
+                    
+                        <li>
+                            <b>Enregistrement "bufferisé"</b>:<br>
+                            L'enregistrement est "bufferisé", c'est-à-dire qu'avant d'être encodé dans le fichier, le flux audio est enregistré en mémoire, ceci pour éviter de perdre des données audio lors de l'écoute étant donné que l'encodage audio est souvent une action lente. Si votre ordinateur est assez rapide pour encoder le flux audio en temps réel (c'est-à-dire que votre ordinateur encode le flux audio à peu près aussi vite que vous l'entendez dans les haut-parleurs), le temps affiché dans la zone d'info en mode enregistrement sera bien basé sur des secondes et le buffer va rester presque vide. Toutefois si votre ordinateur n'est pas assez rapide, le buffer va se remplir de plus en plus (il y a plus de données audio qui rentrent qu'il n'en sort) pouvant rapidement ralentir tout votre ordinateur (saturation), le temps affiché va aller bien moins vite que des secondes (normal : c'est le temps encodé dans le fichier audio), et lorsque vous allez demander d'arrêter la session d'enregistrement (bouton stop), FStream va bloquer jusqu'a ce qu'il ait fini d'encoder les données audio qui se trouvent dans le buffer. Si tel est le cas, essayez de baisser la qualité d'encodage pour le MP3 ou de choisir un format sans compression comme le WAV.
+                        </li>
+                        
+                        <li>
+                            <b>Démarer/arrêter un enregistrement</b>:<br>
+                            Il faut utiliser les touches modificatrices de comportement. Référez-vous à la section "Touches modificatrices" sur la gauche.
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+        </table>
+    </body>
+</html>
