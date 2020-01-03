@@ -180,7 +180,7 @@ if (!$mode) {
 
     if ($] == "5.008006" && !-e "/usr/local/Cellar/perl/$PERL_VER/") {
       print "Detected outdate perl, using brew to install a new one!\n";
-      print "This will take a *long* time\n\n"
+      print "This will take a *long* time\n\n";
       systemAsUser("brew install $DLDIR/perl.rb");
     }
   }
