@@ -29,6 +29,8 @@ my $APRUTIL_VER = "1.5.4_1";
 my $GCC_VER     = "7.3.0";
 my $PCRE_VER    = "8.39";
 my $NASM_VER    = "2.11.08";
+my $MODPERL_VER = "2.0.11";
+my $PERL_VER    = "5.22.0";
 
 if ($^O !~ /darwin/) {
   print "NOTE: This script is intended to run on OS X!!!\n";
@@ -159,6 +161,28 @@ if (!$mode) {
     }
 
     compileApache2();
+  }
+} elsif ($mode eq "modperl") {
+  unless (-e "$DLDIR/mod_perl.tar") {
+    system "wget https://www-us.apache.org/dist/perl/mod_perl-$MODPERL_VER.tar.gz -O $DLDIR/mod_perl.tar.gz";
+    if (-e "$DLDIR/mod_perl.tar.gz" && !-e "$DLDIR/mod_perl.tar") {
+      print "Gunzipping mod_perl.tar.gz...\n";
+      system "gunzip $DLDIR/mod_perl.tar.gz";
+    }
+
+    if (-e "$DLDIR/mod_perl.tar") {
+      print "Decompressing mod_perl.tar...\n";
+      system "tar xf $DLDIR/mod_perl.tar -C $DLDIR";
+      if (!-e "$DLDIR/mod_perl-$MODPERL_VER/Makefile.pl") {
+        die "Error extracting mod_perl.tar\n";
+      }
+    }
+
+    if ($] == "5.008006" && !-e "/usr/local/Cellar/perl/$PERL_VER/") {
+      print "Detected outdate perl, using brew to install a new one!\n";
+      print "This will take a *long* time\n\n"
+      systemAsUser("brew install $DLDIR/perl.rb");
+    }
   }
 } elsif ($mode eq "clean") {
   system "rm -r $DLDIR/httpd-$APACHE_VER $DLDIR/httpd.tar $DLDIR/httpd.tar.gz";
