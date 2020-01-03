@@ -21,7 +21,7 @@ class Gcc < Formula
 
   desc "GNU compiler collection"
   homepage "https://gcc.gnu.org"
-  url "https://github.com/ablakely/FStreamServer/raw/master/resources/gcc-7.3.0.tar.xz"
+  url "https://raw.githubusercontent.com/ablakely/FStreamServer/master/resources/gcc-7.3.0.tar.xz"
   mirror "https://ftpmirror.gnu.org/gcc/gcc-7.3.0/gcc-7.3.0.tar.xz"
   sha256 "832ca6ae04636adbb430e865a1451adf6979ab44ca1c8374f61fba65645ce15c"
 

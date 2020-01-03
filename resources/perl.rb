@@ -1,7 +1,7 @@
 class Perl < Formula
   desc "Highly capable, feature-rich programming language"
   homepage "https://www.perl.org/"
-  url "https://github.com/ablakely/FStreamServer/raw/master/resources/perl-5.22.0.tar.xz"
+  url "https://raw.githubusercontent.com/ablakely/FStreamServer/master/resources/perl-5.22.0.tar.xz"
   mirror "https://mirrors.kernel.org/debian/pool/main/p/perl/perl_5.22.0.orig.tar.xz"
   sha256 "be83ead0c5c26cbbe626fa4bac1a4beabe23a9eebc15d35ba49ccde11878e196"
 

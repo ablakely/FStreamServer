@@ -1,7 +1,7 @@
 class Nasm < Formula
   desc "Netwide Assembler (NASM) is an 80x86 assembler"
   homepage "http://www.nasm.us/"
-  url "https://github.com/ablakely/FStreamServer/raw/master/resources/nasm-2.11.08.tar.xz"
+  url "https://raw.githubusercontent.com/ablakely/FStreamServer/master/resources/nasm-2.11.08.tar.xz"
   sha256 "c99467c7072211c550d147640d8a1a0aa4d636d4d8cf849f3bf4317d900a1f7f"
 
   bottle do
