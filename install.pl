@@ -4,15 +4,19 @@
 #
 # Target     -   Description
 #------------------------------------------------
+# all        -   Installs all targets
 # apache2    -   Installs apache v2.4.41
-# modperl    -   Installs modperl
+# modperl    -   Installs mod_perl v2.0.11
 # (none)     -   Installs FStreamServer v0.5
 #------------------------------------------------
 # apache2 Note:
 #   apache2 target requires a newer gcc version than what shipped
 #   with OS X 10.4.11 Tiger.
-#   This target will identifiy the $PATH gcc version and upgrade with brew
+#   This target will identifiy the $PATH gcc version and upgrade with brew v7.3.0
 #   if it matches the shipped version: 4.0.1 (Apple Computer, Inc. build 5370)
+#
+# modperl Note:
+#    This will brew perl v5.22.0
 #
 # Written by Aaron Blakely <aaron@ephasic.org>
 # Copyright 2019 (C) Aaron Blakely
@@ -108,10 +112,7 @@ sub compileApache2 {
   system "make && echo 'Finished make -- Installing' && make install && echo 'Cleaning up build' && make clean";
 }
 
-if (!$mode) {
-  print "Installing FStreamServer...\n";
-
-} elsif ($mode eq "apache2") {
+sub installApache2 {
   die "brew is not installed!\n" unless checkDependencie("brew");
 
   my $instr = "";
@@ -162,7 +163,9 @@ if (!$mode) {
 
     compileApache2();
   }
-} elsif ($mode eq "modperl") {
+}
+
+sub installModPerl {
   unless (-e "$DLDIR/mod_perl.tar") {
     system "wget https://www-us.apache.org/dist/perl/mod_perl-$MODPERL_VER.tar.gz -O $DLDIR/mod_perl.tar.gz";
     if (-e "$DLDIR/mod_perl.tar.gz" && !-e "$DLDIR/mod_perl.tar") {
@@ -183,9 +186,42 @@ if (!$mode) {
       print "This will take a *long* time\n\n";
       systemAsUser("brew install $DLDIR/perl.rb");
     }
+
+    my $apxsPath = "/Applications/Apache2/bin/apxs";
+    chdir "$DLDIR/mod_perl-$MODPERL_VER";
+    system "/usr/local/Cellar/perl/5.22.0/bin/perl  $DLDIR/mod_perl-$MODPERL_VER/Makefile.PL MP_APXS=$apxsPath MP_APR_CONFIG=/usr/local/Cellar/apr/$APR_VER/bin/apr-1-config";
+    print "\n\nCompiling mod_perl...\n\n";
+    system "make";
+    systemAsUser("make test");
+
+    print "Installing mod_perl...\n";
+    system "make install";
   }
+}
+
+sub installFStreamServer {
+  if (!-e "/Applications/FStream.app") {
+    print "FStream not installed, copying to /Applications...\n";
+    system "cp -r $DLDIR/FStream.app /Applications/";
+  }
+}
+
+if (!$mode) {
+  print "Installing FStreamServer...\n";
+  installFStreamServer();
+} elsif ($mode eq "apache2") {
+  print "Installing Apache2...\n";
+  installApache2();
+} elsif ($mode eq "modperl") {
+  print "Installing mod_perl...\n";
+  installModPerl();
 } elsif ($mode eq "clean") {
-  system "rm -r $DLDIR/httpd-$APACHE_VER $DLDIR/httpd.tar $DLDIR/httpd.tar.gz";
+  system "rm -r $DLDIR/httpd-$APACHE_VER $DLDIR/httpd.tar $DLDIR/httpd.tar.gz $DLDIR/mod_perl-$PERL_VER $DLDIR/mod_perl.tar";
+} elsif ($mode eq "all") {
+  print "Installing all targets...\n";
+  installApache2();
+  installModPerl();
+  installFStreamServer();
 } else {
   die "$mode is not an install target!\n";
 }

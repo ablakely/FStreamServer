@@ -25,8 +25,21 @@ apache2 | v2.4.41 | | :heavy_check_mark:
 ### Installing modperl (Requires brew)
 Run command: `perl install.pl modperl`
 
+This will install the following packages:
+
+Package | Version | Brew | Compile
+--- | --- | --- | ---
+mod_perl | 2.0.11 | | :heavy_check_mark:
+perl | 5.22.0 | :heavy_check_mark: |
+
+
+
 ## Compatibility
-Tested hardware config: iMac G4 with 10.4.11 and apache2 with mod_perl
+Tested hardware config: iMac G4 (700Mhz, 512MB ram) with 10.4.11 and apache2 with mod_perl.
+
+If your specs are like mine run `perl install.pl all` and come back in a couple of hours.
+
+---
 
 ## FStream
 [FStream](https://www.sourcemac.com/?page=fstream&lang=en) is a little WebRadio listener/recorder software for OS X.
