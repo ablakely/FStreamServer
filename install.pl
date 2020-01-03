@@ -20,10 +20,15 @@
 use strict;
 use warnings;
 
+my $mode = shift;
+
 # Software versions
 my $APACHE_VER  = "2.4.41";
 my $APR_VER     = "1.5.2";
 my $APRUTIL_VER = "1.5.4_1";
+my $GCC_VER     = "7.3.0";
+my $PCRE_VER    = "8.39";
+my $NASM_VER    = "2.11.08";
 
 if ($^O !~ /darwin/) {
   print "NOTE: This script is intended to run on OS X!!!\n";
@@ -33,18 +38,19 @@ if (`whoami` !~ /root/ && !$ENV{DEBUGINSTALL}) {
   die "Error: Installer requires root!\n";
 }
 
-my $brewpath = "";
+my $DLDIR = $ENV{PWD}."/resources";
 
 sub checkDependencie {
-  my ($name) = @_;
+  my ($name, $rmode) = @_;
 
   my @path = split(":", $ENV{PATH});
   foreach my $t (@path) {
-    if (-e "$t/brew" && -x "$t/brew") {
-      $brewpath = $t."/brew";
-    }
     if (-e "$t/$name" && -x "$t/$name") {
-      return 1;
+      if (!$rmode) {
+        return 1;
+      } else {
+        return "$t/$name";
+      }
     }
   }
 
@@ -52,25 +58,54 @@ sub checkDependencie {
 }
 
 sub gccNeedsUpdate {
-  my @gccver = `gcc -v`;
+  my @gccver = `gcc -v 2>&1`;
 
-  if ($gccver[-1] eq "gcc version 4.0.1 (Apple Computer, Inc. build 5370") {
-    return 1;
+  print "System GCC Version: ".$gccver[-1]."\n";
+  if ($gccver[-1] eq "gcc version 4.0.1 (Apple Computer, Inc. build 5370)") {
+    if (!-e "/usr/local/Cellar/gcc/$GCC_VER/bin/gcc-7") {
+      return 1;
+    }
   }
 
   return 0;
 }
 
 sub systemAsUser {
-  my ($cmd) = @_;
+  my ($cmdUP, $rmode) = @_;
 
   my $user = `osascript fstream.scpt getUser`;
   chomp $user;
 
+  if ($rmode) {
+    return $user;
+  }
+
+  my @tmp = split(" ", $cmdUP);
+  $tmp[0] = checkDependencie($tmp[0], 1);
+
+  my $cmd = join(" ", @tmp);
   system "su - $user -c '$cmd'";
 }
 
-my $mode = shift;
+sub compileApache2 {
+  # Setup our compile env
+  $ENV{CC}     = "/usr/local/Cellar/gcc/$GCC_VER/bin/gcc-7";
+  $ENV{CPP}    = $ENV{CC}." -E";
+  my $CFGARGS  = "--with-apr=/usr/local/Cellar/apr/$APR_VER/";
+  $CFGARGS    .= " --with-apr-util=/usr/local/Cellar/apr-util/$APRUTIL_VER/";
+  $CFGARGS    .= " --with-pcre=/usr/local/Cellar/pcre/$PCRE_VER";
+
+  my $oldPWD   = $ENV{PWD};
+  chdir "$DLDIR/httpd-$APACHE_VER";
+  system "./configure -prefix=/Applications/Apache2 -enable-module=most -enable-shared=max $CFGARGS";
+
+  print "Patching libtool config\n";
+  system "cp $DLDIR/libtool /usr/local/Cellar/apr/1.5.2/libexec/build-1/libtool";
+
+  print "\n\nCompiling Apache2 this will take a *long* time\n\n";
+  system "make && echo 'Finished make -- Installing' && make install && echo 'Cleaning up build' && make clean";
+}
+
 if (!$mode) {
   print "Installing FStreamServer...\n";
 
@@ -83,33 +118,50 @@ if (!$mode) {
     print "wget wasn't found, adding to install list.\n";
     $instr = $instr." wget"; # you can thank me later :-)
   }
-  if (!checkDependencie("apr-1-config") || !-e "/usr/local/Cellar/apr/$APR_VER/bin/apr-1-config") {
+  if (!checkDependencie("apr-1-config") && !-e "/usr/local/Cellar/apr/$APR_VER/bin/apr-1-config") {
     print "apr $APR_VER wasn't found, adding to install list.\n";
-    $instr = $instr.' apr@'.$APR_VER;
+    $instr = $instr." $DLDIR/apr.rb";
   }
-  if (!checkDependencie("apu-1-config") || !-e "/usr/local/Cellar/apr-util/$APRUTIL_VER/bin/apu-1-config") {
+  if (!checkDependencie("apu-1-config") && !-e "/usr/local/Cellar/apr-util/$APRUTIL_VER/bin/apu-1-config") {
     print "apr-util $APRUTIL_VER wasn't found, adding to install list.\n";
-    $instr = $instr.' apr-util@'.$APRUTIL_VER;
+    $instr = $instr." $DLDIR/apr-util.rb";
+  }
+  if (!checkDependencie("pcre-config") && !-e "/usr/local/Cellar/pcre/$PCRE_VER/bin/pcre-config") {
+    $instr = $instr." $DLDIR/pcre.rb";
   }
 
-  print "Installing$instr\n";
-  systemAsUser("$brewpath install$instr");
-
-  exit;
-  print "Installing Apache2...\n";
-  system "wget https://www-us.apache.org/dist//httpd/httpd-$APACHE_VER.tar.gz -O httpd.tar.gz";
-
-  if (-e "httpd.tar.gz") { print "Gunzipping httpd.tar.gz...\n"; system "gunzip httpd.tar.gz"; }
-  if (-e "httpd.tar") { print "Decompressing httpd.tar...\n"; system "tar xvf httpd.tar"; }
+  if ($instr ne "") { print "Installing$instr\n"; systemAsUser("brew install$instr");}
 
   if (gccNeedsUpdate()) {
     print "\n\nFound gcc but it's too old, installing a new one with brew!\n";
     print "This will *probably* take a *LONG* time\n\n"; # gmp built in 77 mins on my iMac G4 (700mhz, 512mb ram - hello 2002)
-    systemAsUser("$brewpath install gcc");
+    systemAsUser("brew install $DLDIR/gcc.rb $DLDIR/nasm.rb");
   }
 
-  die "Error extracting httpd.tar\n" unless (-e "./httpd-$APACHE_VER/configure");
-  system "./httpd-$APACHE_VER/configure -prefix=/Applications/Apache2 -enable-module=most -enable-shared=max --with-apr=/usr/local/Cellar/apr/$APR_VER/ --with-apr-util=/usr/local/Cellar/apr-util/$APRUTIL_VER/";
+  if (-e "$DLDIR/httpd.tar" && !-e "/Applications/Apache2/bin") {
+    compileApache2();
+  }
+
+  unless (-e "$DLDIR/httpd.tar") {
+    print "Installing Apache2...\n";
+    system("wget https://www-us.apache.org/dist//httpd/httpd-$APACHE_VER.tar.gz -O $DLDIR/httpd.tar.gz");
+    if (-e "$DLDIR/httpd.tar.gz" && !-e "$DLDIR/httpd.tar") {
+      print "Gunzipping httpd.tar.gz...\n";
+      system("gunzip $DLDIR/httpd.tar.gz");
+    }
+
+    if (-e "$DLDIR/httpd.tar") {
+      print "Decompressing httpd.tar...\n";
+      system("tar xf $DLDIR/httpd.tar -C $DLDIR");
+      if (!-e "$DLDIR/httpd-$APACHE_VER/configure") {
+          die "Error extracting httpd.tar\n";
+      }
+    }
+
+    compileApache2();
+  }
+} elsif ($mode eq "clean") {
+  system "rm -r $DLDIR/httpd-$APACHE_VER $DLDIR/httpd.tar $DLDIR/httpd.tar.gz";
 } else {
   die "$mode is not an install target!\n";
 }
