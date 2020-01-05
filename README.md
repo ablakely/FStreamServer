@@ -39,6 +39,7 @@ perl | v5.22.0 | :heavy_check_mark: |
 
 Once this has finished run:
 `perl install.pl apacheconfig`
+
 This will automatically mod the apache config to make FStreamServer the root
 
 ## Compatibility
