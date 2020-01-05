@@ -4,3 +4,4 @@ resources/httpd.tar.gz
 resources/mod_perl-2.0.11
 resources/mod_perl.tar
 resources/mod_perl.tar.gz
+apachectl

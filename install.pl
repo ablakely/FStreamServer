@@ -2,12 +2,13 @@
 # install.pl - FStreamServer Install script
 # Usage: ./install.pl <target>
 #
-# Target     -   Description
+# Target       -   Description
 #------------------------------------------------
-# all        -   Installs all targets
-# apache2    -   Installs apache v2.4.41
-# modperl    -   Installs mod_perl v2.0.11
-# (none)     -   Installs FStreamServer v0.5
+# all          -   Installs all targets
+# apache2      -   Installs apache v2.4.41
+# modperl      -   Installs mod_perl v2.0.11
+# (none)       -   Installs FStreamServer v0.5
+# apacheconfig -   Enables mod_perl in httpd.conf
 #------------------------------------------------
 # apache2 Note:
 #   apache2 target requires a newer gcc version than what shipped
@@ -19,8 +20,12 @@
 #    This will brew perl v5.22.0
 #
 # Written by Aaron Blakely <aaron@ephasic.org>
-# Copyright 2019 (C) Aaron Blakely
+# Copyright 2019-2020 (C) Aaron Blakely
 
+use lib ".";
+use lib "./lib";
+
+use FStream;
 use strict;
 use warnings;
 
@@ -44,7 +49,13 @@ if (`whoami` !~ /root/ && !$ENV{DEBUGINSTALL}) {
   die "Error: Installer requires root!\n";
 }
 
-my $DLDIR = $ENV{PWD}."/resources";
+my $BDIR   = $ENV{PWD};
+my $DLDIR  = $ENV{PWD}."/resources";
+my $WWWDIR = $ENV{PWD}."/www";
+my $LIBDIR = $ENV{PWD}."/lib";
+
+my $FStream = FStream->new();
+my $USER = $FStream->getUser();
 
 sub checkDependencie {
   my ($name, $rmode) = @_;
@@ -79,8 +90,7 @@ sub gccNeedsUpdate {
 sub systemAsUser {
   my ($cmdUP, $rmode) = @_;
 
-  my $user = `osascript fstream.scpt getUser`;
-  chomp $user;
+  my $user = $USER;
 
   if ($rmode) {
     return $user;
@@ -162,6 +172,7 @@ sub installApache2 {
     }
 
     compileApache2();
+    system "chown -R "
   }
 }
 
@@ -196,19 +207,104 @@ sub installModPerl {
 
     print "Installing mod_perl...\n";
     system "make install";
+
+    fixApacheConfig();
   }
+}
+
+sub fixApacheConfig {
+  open(my $fh, "</Applications/Apache2/conf/httpd.conf") or die "Cannot read httpd.conf: $!\n";
+  my @tmpConf = <$fh>;
+  close($fh) or die "hmm".$!;
+
+  my @conf;
+  my $appendModPerlCFG = 1;
+
+  my $user = $USER;
+
+  for (my $i = 0; $i < scalar(@tmpConf); $i++) {
+    if ($tmpConf[$i] =~ /^User (.*)$/) {
+      if ($1 ne $user) {
+        print "httpd.conf:$i: User is set to $1 ... changing to $user\n";
+        $conf[$i] = "User $user\n";
+      } else {
+        $conf[$i] = $tmpConf[$i];
+      }
+    } elsif ($tmpConf[$i] =~ /^Group (.*)$/) {
+      if ($1 ne $user) {
+        print "httpd.conf:$i: Group is set to $1 ... changing to $user\n";
+        $conf[$i] = "Group $user\n";
+      } else {
+        $conf[$i] = $tmpConf[$i];
+      }
+    } elsif ($tmpConf[$i] =~ /^DocumentRoot \"(.*)\"$/) {
+      if ($1 ne $WWWDIR) {
+        print "httpd.conf:$i: DocumentRoot is set to $1 ... changing to $WWWDIR\n";
+        $conf[$i] = "DocumentRoot \"$WWWDIR\"\n";
+        $conf[++$i] = "<Directory \"$WWWDIR\">\n";
+      } else {
+        $conf[$i] = $tmpConf[$i];
+      }
+    } elsif ($tmpConf[$i] =~ /^Listen (.*)$/) {
+      if ($1 ne "8080") {
+        print "httpd.conf:$i: Port is set to $1 ... changing to 8080\n";
+        $conf[$i] = "Listen 8080\n";
+      } else {
+        $conf[$i] = $tmpConf[$i];
+      }
+    } elsif ($tmpConf[$i] =~ /#- mod_perl auto install for FStreamServer -#/) {
+      $appendModPerlCFG = 0;
+      $conf[$i] = $tmpConf[$i];
+    } else {
+      $conf[$i] = $tmpConf[$i];
+    }
+  }
+
+  if ($appendModPerlCFG) {
+    print "Enabling mod_perl for *.pl/*.cgi\n";
+    push(@conf, (
+      "#- mod_perl auto install for FStreamServer -#\n",
+      "LoadModule perl_module modules/mod_perl.so\n",
+      '<Files ~ "\.(pl|cgi)$">'."\n",
+      '  SetHandler perl-script'."\n",
+      '  PerlResponseHandler ModPerl::Registry'."\n",
+      '  PerlOptions +ParseHeaders'."\n",
+      '  Options +ExecCGI'."\n",
+      '  Order allow,deny'."\n",
+      '  Allow from all'."\n",
+      #'  PerlSendHeader On'."\n",
+      '</Files>'."\n"
+    ));
+  }
+
+  open($fh, ">/Applications/Apache2/conf/httpd.conf") or die $!;
+  for (my $i = 0; $i < scalar(@conf); $i++) {
+    print $fh $conf[$i] unless (!$conf[$i]);
+  }
+  close($fh) or die $!;
 }
 
 sub installFStreamServer {
   if (!-e "/Applications/FStream.app") {
     print "FStream not installed, copying to /Applications...\n";
     system "cp -r $DLDIR/FStream.app /Applications/";
+    system "chown -R aaron /Applications/FStream.app";
+  }
+
+  if (!-e "/Applications/FStreamServer") {
+    print "Moving files...\n";
+    system "mv $BDIR /Applications/";
+    system "chown -R aaron /Applications/FStreamServer";
   }
 }
+
 
 if (!$mode) {
   print "Installing FStreamServer...\n";
   installFStreamServer();
+} elsif ($mode eq "apacheconfig") {
+  print "Modifying Apache httpd.conf...\n";
+  fixApacheConfig();
 } elsif ($mode eq "apache2") {
   print "Installing Apache2...\n";
   installApache2();
@@ -222,6 +318,7 @@ if (!$mode) {
   installApache2();
   installModPerl();
   installFStreamServer();
+  fixApacheConfig();
 } else {
   die "$mode is not an install target!\n";
 }

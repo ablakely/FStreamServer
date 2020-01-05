@@ -29,8 +29,8 @@ This will install the following packages:
 
 Package | Version | Brew | Compile
 --- | --- | --- | ---
-mod_perl | 2.0.11 | | :heavy_check_mark:
-perl | 5.22.0 | :heavy_check_mark: |
+mod_perl | v2.0.11 | | :heavy_check_mark:
+perl | v5.22.0 | :heavy_check_mark: |
 
 
 
