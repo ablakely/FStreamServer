@@ -97,7 +97,11 @@ sub systemAsUser {
   }
 
   my @tmp = split(" ", $cmdUP);
-  $tmp[0] = checkDependencie($tmp[0], 1);
+  if ($tmp[0] ne "cpan") {
+    $tmp[0] = checkDependencie($tmp[0], 1);
+  } else {
+    $tmp[0] = "/usr/local/Cellar/perl/$PERL_VER/bin/cpan";
+  }
 
   my $cmd = join(" ", @tmp);
   system "su - $user -c '$cmd'";
@@ -172,7 +176,7 @@ sub installApache2 {
     }
 
     compileApache2();
-    system "chown -R "
+    system "chown -R $USER /Applications/Apache2";
   }
 }
 
@@ -209,6 +213,9 @@ sub installModPerl {
     system "make install";
 
     fixApacheConfig();
+
+    print "Installing perl CGI with /usr/local/Cellar/perl/$PERL_VER/bin/cpan";
+    systemAsUser("cpan -i CGI");
   }
 }
 
@@ -319,6 +326,11 @@ if (!$mode) {
   installModPerl();
   installFStreamServer();
   fixApacheConfig();
+
+  print "Installing all targets completed!\n\nFinal user steps:\n";
+  print "  -> Start Apache: /Applications/Apache2/bin/apachectl start\n";
+  print "  -> Start FStream app\n";
+  print "  -> Point your browser to http://this.machine:8080/\n";
 } else {
   die "$mode is not an install target!\n";
 }

@@ -2,10 +2,15 @@
 
 FStreamServer is a perl CGI script for controlling FStream on older Macs
 
+![Screenshot](https://i.imgur.com/lukTCrC.png "Screenshot")
+
 ## Installing
 
 In terminal change to the FStreamServer directory and run:
 `perl install.pl`
+
+To install apache2, mod_perl, and FStreamServer run (requires brew):
+`perl install.pl all`
 
 ### Installing Apache2 (Requires brew)
 Run command: `perl install.pl apache2`
@@ -32,7 +37,9 @@ Package | Version | Brew | Compile
 mod_perl | v2.0.11 | | :heavy_check_mark:
 perl | v5.22.0 | :heavy_check_mark: |
 
-
+Once this has finished run:
+`perl install.pl apacheconfig`
+This will automatically mod the apache config to make FStreamServer the root
 
 ## Compatibility
 Tested hardware config: iMac G4 (700Mhz, 512MB ram) with 10.4.11 and apache2 with mod_perl.
