@@ -293,8 +293,9 @@ sub fixApacheConfig {
 
 sub installFStreamServer {
   if (!-e "/Applications/FStream.app") {
-    print "FStream not installed, copying to /Applications...\n";
-    system "cp -r $DLDIR/FStream.app /Applications/";
+    print "FStream not installed, installing...\n";
+    system "gunzip $DLDIR/FStream.tar.gz && tar xvf $DLDIR/FStream.tar";
+    system "mv $DLDIR/FStream.app /Applications/";
     system "chown -R aaron /Applications/FStream.app";
   }
 
